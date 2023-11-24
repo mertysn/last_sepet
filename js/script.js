@@ -16,7 +16,14 @@ if (localItem) {
         toplamSepet += urun.quantity
     })
 
-    span.textContent = toplamSepet
+    
+
+    if (sepet.length == 0) {
+        span.textContent = ''
+    } else {
+        span.textContent = toplamSepet
+        
+    }
 }
 // localStorage.clear()
 // console.log(urunler)
@@ -170,7 +177,7 @@ if (window.location.href == 'http://127.0.0.1:5500/index.html') {
 
             const price = document.createElement('p')
             let urununFiyati = urun.fiyat * urun.quantity
-            price.textContent = urununFiyati + '$'
+            price.textContent = urununFiyati.toFixed(2) + '$'
             price.style.fontWeight = 'bold'
 
             const kacTane = document.createElement('div')
@@ -193,7 +200,9 @@ if (window.location.href == 'http://127.0.0.1:5500/index.html') {
                 if (urun.quantity >= 1) {
                     urun.quantity--
                     sayi.textContent = urun.quantity
+                    price.textContent = (urun.fiyat * urun.quantity).toFixed(2) + '$'
 
+                    localStorage.setItem('sepet', JSON.stringify(sepet))
 
                     if (urun.quantity == 0) {
                         // console.log(this.parentElement.parentElement)
@@ -208,15 +217,51 @@ if (window.location.href == 'http://127.0.0.1:5500/index.html') {
                         //! LocalStorage'dan silme
 
                     }
+                    let toplam = 0
+                    sepet.forEach(e => {
+                        toplam += e.quantity
+                    })
+                    if (sepet.length == 0) {
+                        span.textContent = ''
+                    } else {
+                
+                        span.textContent = toplam
+                    }
+
+                    // span.textContent = toplam
                 }
+                if (sepet.length == 0) {
+                    const h4 = document.createElement('h4')
+                    h4.textContent = 'Sepetinizde Ürün Kalmamıştır...'
+            
+                    container.append(h4)
+                    container.removeChild(hr)
+                }
+                let toplamSepetFiyati = 0
+                sepet.forEach(e => {
+                    toplamSepetFiyati += e.fiyat * e.quantity
+            })
+            sepetFiyat.textContent = toplamSepetFiyati.toFixed(2) + '$'
+               
             })
 
             arttirBtn.addEventListener('click', () => {
                 urun.quantity++
                 sayi.textContent = urun.quantity
-
+                price.textContent = (urun.fiyat * urun.quantity).toFixed(2) + '$'
+                localStorage.setItem('sepet', JSON.stringify(sepet))
                 // urun.fiyat += urun.quantity
                 // price.textContent = urun.fiyat
+                let toplam = 0
+                sepet.forEach(e => {
+                    toplam += e.quantity
+                })
+
+                span.textContent = toplam
+                let toplamSepetFiyati = 0
+                sepet.forEach(e => {
+                toplamSepetFiyati += e.fiyat * e.quantity
+            })
 
             })
 
@@ -232,8 +277,34 @@ if (window.location.href == 'http://127.0.0.1:5500/index.html') {
             div.append(kacTane)
 
             container.append(div)
-
         })
+
+            const hr = document.createElement('hr')
+
+            container.append(hr)
+
+            const fiyatDiv = document.createElement('div')
+            fiyatDiv.classList.add('w-100', 'd-flex', 'justify-countent-around')
+
+            let sepetFiyat = document.createElement('h3')
+
+            let toplamSepetFiyati = 0
+            sepet.forEach(e => {
+                toplamSepetFiyati += e.fiyat * e.quantity
+            })
+            sepetFiyat.textContent = toplamSepetFiyati.toFixed(2)
+
+            const sepetBtn = document.createElement('button')
+            sepetBtn.classList.add('btn', 'btn-success', 'w-50')
+            sepetBtn.textContent = 'Satın Al'
+
+            
+
+            fiyatDiv.append(sepetFiyat)
+            fiyatDiv.append(sepetBtn)
+            container.append(fiyatDiv)
+
+      
 
     }
 
