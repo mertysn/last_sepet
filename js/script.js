@@ -6,10 +6,17 @@ let sepet = []
 
 let localItem = localStorage.getItem('sepet')
 
+let toplamSepet = 0
+
 if (localItem) {
     sepet = JSON.parse(localItem)
-    // console.log(sepet)
-    span.textContent = sepet.length
+    console.log(sepet)
+
+    sepet.forEach(urun => {
+        toplamSepet += urun.quantity
+    })
+
+    span.textContent = toplamSepet
 }
 // localStorage.clear()
 // console.log(urunler)
@@ -19,11 +26,36 @@ console.log(sepet.length)
 
 if (window.location.href == 'http://127.0.0.1:5500/index.html') {
     const row = document.querySelector('.row')
+    const input = document.getElementById('input')
+
+
+      // ! Arama kodunu burdan yazacam
+
+      input.addEventListener('input', (element) => {
+        console.log(element.target.value.toLowerCase())
+        let kullaniciDeger = element.target.value.toLowerCase()
+        const col = document.querySelectorAll('.col-12')
+        // console.log(col)
+
+        for (let i = 0; i < col.length; i++) {
+            // console.log(col[i].firstChild.nextSibling.firstChild.textContent)
+            let urunAdi = col[i].firstChild.firstChild.nextSibling.firstChild.textContent.toLowerCase()
+
+            let urunAciklama = col[i].firstChild.firstChild.nextSibling.firstChild.nextSibling.textContent.toLowerCase()
+
+            // console.log(urunAdi.indexOf(kullaniciDeger))
+            if (urunAdi.indexOf(kullaniciDeger) != -1 || urunAciklama.indexOf(kullaniciDeger) != -1) {
+                col[i].style.display = 'flex'
+            } else {
+                col[i].style.display = 'none'
+            }
+        }
+      })
 
     urunler.forEach((urun) => {
 
         // console.log(urun)
-
+      
         urun.quantity = 1
 
         // console.log(urun)
@@ -84,8 +116,13 @@ if (window.location.href == 'http://127.0.0.1:5500/index.html') {
                 sepet.push(urun)
             }
 
+            let toplam = 0
+            sepet.forEach(element => {
+                toplam += element.quantity
+            })
+
             localStorage.setItem('sepet', JSON.stringify(sepet))
-            span.textContent = sepet.length
+            span.textContent = toplam
         })
 
         cardBody.append(baslik)
